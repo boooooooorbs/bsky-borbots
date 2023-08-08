@@ -9,7 +9,7 @@ import resizeImage from './src/resizeImage.ts';
 
 // Obter lista de artigos do Feed RSS
 const itemList = await getItemList();
-console.log(JSON.stringify(itemList, null, 2)); // Pega os 2 posts mais recentes
+console.log(JSON.stringify(itemList, null, 2));
 
 // Termina, se não houver alvo
 if (!itemList.length) {
