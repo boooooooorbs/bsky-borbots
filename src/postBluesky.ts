@@ -23,12 +23,12 @@ export default async ({
 }) => {
   const thumb = await (async () => {
     if (image instanceof Uint8Array && typeof mimeType === 'string') {
-      // 画像をアップロード
+      // Enviar Imagem
       const uploadedImage = await agent.uploadBlob(image, {
         encoding: mimeType,
       });
 
-      // 投稿オブジェクトに画像を追加
+      // Adicionar imagem ao Skeet
       return {
         $type: 'blob',
         ref: {
@@ -40,23 +40,19 @@ export default async ({
     }
   })();
 
+  // Embeda imagens no Skeet
   const postObj: Partial<AtprotoAPI.AppBskyFeedPost.Record> &
     Omit<AtprotoAPI.AppBskyFeedPost.Record, 'createdAt'> = {
     $type: 'app.bsky.feed.post',
     text: rt.text,
     facets: rt.facets,
     embed: {
-      $type: 'app.bsky.embed.external',
-      external: {
-        uri: link,
-        title,
-        description,
-        thumb,
-      },
+      $type: 'app.bsky.embed.images',
+      images,
     },
   };
 
   console.log(JSON.stringify(postObj, null, 2));
   await agent.post(postObj);
-  console.log('post to Bluesky');
+  console.log('Skeet!');
 };
