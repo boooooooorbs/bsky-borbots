@@ -7,33 +7,33 @@ import postBluesky from './src/postBluesky.ts';
 import postWebhook from './src/postWebhook.ts';
 import resizeImage from './src/resizeImage.ts';
 
-// rss feedから記事リストを取得
+// Obter lista de artigos do Feed RSS
 const itemList = await getItemList();
-console.log(JSON.stringify(itemList, null, 2));
+console.log(JSON.stringify(itemList, null, 2)); // Pega os 2 posts mais recentes
 
-// 対象がなかったら終了
+// Termina, se não houver alvo
 if (!itemList.length) {
-  console.log('not found feed item');
+  console.log('Nada de novo por aqui. Circulando...');
   Deno.exit(0);
 }
 
-// 取得した記事リストをループ処理
+// Dá uma olhada na lista de artigos recuperados
 for await (const item of itemList) {
-  // 最終実行時間を更新
+  // Atualizar a hora da última execução
   const timestamp = item.published
     ? new Date(item.published).toISOString()
     : new Date().toISOString();
   await Deno.writeTextFile('.timestamp', timestamp);
 
-  // 投稿記事のプロパティを作成
+  // Cria as propriedades do post
   const { bskyText, xText, title, link, description } = await createProperties(
     item
   );
 
-  // URLからOGPの取得
+  // Obter OGP do URL
   const og = await getOgp(link);
 
-  // 画像のリサイズ
+  // Redimensionar imagem
   const { mimeType, resizedImage } = await (async () => {
     const ogImage = og.ogImage?.at(0);
     if (!ogImage) {
@@ -43,7 +43,7 @@ for await (const item of itemList) {
     return await resizeImage(new URL(ogImage.url, link).href);
   })();
 
-  // Blueskyに投稿
+  // Postando no Bluesky
   await postBluesky({
     rt: bskyText,
     title,
@@ -53,6 +53,6 @@ for await (const item of itemList) {
     image: resizedImage,
   });
 
-  // IFTTTを使ってXに投稿
+  // Publique no Twitter usando IFTTT
   await postWebhook(xText);
 }
