@@ -7,7 +7,7 @@ console.log(lastExecutionTime.trim());
 export default async () => {
   const RSS_URL = Deno.env.get('RSS_URL');
   if (!RSS_URL) {
-    console.log('RSS_URL is not defined');
+    console.log('RSS_URL não foi definido');
     return [];
   }
 
@@ -15,13 +15,13 @@ export default async () => {
   const xml = await response.text();
   const feed = await parseFeed(xml);
 
-  // 最終実行時間以降かつdescriptionがある記事を抽出
+  // Extraia artigos após a última execução
   const foundList = feed.entries.reverse().filter((item: FeedEntry) => {
     return (
       item.published &&
       new Date(lastExecutionTime.trim()) < new Date(item.published)
     );
   });
-  // foundListの5件目までを返す
-  return foundList.slice(0, 5);
+  // Retorna até OITÔ! itens do Feed
+  return foundList.slice(0, 8);
 };
