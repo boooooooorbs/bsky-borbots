@@ -1,7 +1,7 @@
 export default async (text: string) => {
   const WEBHOOK_URL = Deno.env.get('WEBHOOK_URL');
   if (!WEBHOOK_URL) {
-    console.log('WEBHOOK_URL is not defined');
+    console.log('WEBHOOK_URL não foi definido');
     return;
   }
 
@@ -12,5 +12,5 @@ export default async (text: string) => {
     },
     body: JSON.stringify({ value1: text }),
   });
-  console.log('post to X');
+  console.log('Tweet!');
 };
