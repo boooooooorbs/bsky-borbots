@@ -13,7 +13,7 @@ export default async (item: FeedEntry) => {
   const description: string = item.description?.value || '';
   const link: string = item.links[0].href || '';
 
-  // Bluesky用のテキストを作成
+  // Criar SKEET para Bluesky
   const bskyText = await (async () => {
     const max = 300;
     const { host, pathname } = new URL(link);
@@ -52,7 +52,7 @@ export default async (item: FeedEntry) => {
     return rt;
   })();
 
-  // X用のテキストを作成
+  // Criar tweet para Twitter
   const xText = (() => {
     const max = 118;
     const text = `${title}\n${link}`;
