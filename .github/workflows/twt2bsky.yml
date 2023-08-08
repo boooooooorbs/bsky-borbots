@@ -1,19 +1,19 @@
-name: Technews to SNS
+name: Posta no Bluesky
 on:
   schedule:
-    # 5分ごとに実行
-    - cron: '0/5 * * * *'
+    # Executa a cada 10 minutos
+    - cron: '*/10 * * * *'
   workflow_dispatch:
 jobs:
-  technews-to-sns:
+  tweets-to-bluesky:
     runs-on: ubuntu-latest
-    # 5分以上かかったらタイムアウト
+    # Timeout após 5 minutos
     timeout-minutes: 5
     steps:
-      # リポジトリのチェックアウト
+      # Check-out do repositório
       - name: Checkout
         uses: actions/checkout@v3
-      # Cacheの復元
+      # Restauração de cache
       - name: Cache Deno Deps
         uses: actions/cache@v3
         with:
@@ -33,7 +33,7 @@ jobs:
         uses: andstor/file-existence-action@v2
         with:
           files: .timestamp
-      # 現在時刻を設定
+      # Definir hora atual
       - name: Set Current Time
         if: steps.check_file.outputs.files_exists == 'false'
         run: |
@@ -42,12 +42,12 @@ jobs:
         id: set-timestamp-hash
         run: |
           echo "TIMESTAMP=${{hashFiles('.timestamp')}}" >> $GITHUB_OUTPUT
-      # Denoのセットアップ
+      # Configuração do Deno
       - name: Setup Deno
         uses: denoland/setup-deno@v1
         with:
           deno-version: v1.x
-      # Denoの実行
+      # Executa o Deno
       - name: Deno Run
         run: deno run --allow-read --allow-write --allow-env --allow-net main.ts
         env:
@@ -55,7 +55,7 @@ jobs:
           BLUESKY_PASSWORD: ${{secrets.BLUESKY_PASSWORD}}
           RSS_URL: ${{secrets.RSS_URL}}
           WEBHOOK_URL: ${{secrets.WEBHOOK_URL}}
-      # Cacheの保存
+      # Salvar cache
       - name: Save Last Execution Time Cache
         uses: actions/cache/save@v3
         if: ${{always() && (steps.check_file.outputs.files_exists == 'false' || steps.set-timestamp-hash.outputs.TIMESTAMP != hashFiles('.timestamp'))}}
