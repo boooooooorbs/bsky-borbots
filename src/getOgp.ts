@@ -14,6 +14,6 @@ export default async (url: string) => {
   const html = await res.text();
   const { result } = await ogs({ html });
   console.log(JSON.stringify(result, null, 2));
-  console.log('Aquisição do OGP deu certo!);
+  console.log('Aquisição do OGP deu certo!');
   return result;
 };
