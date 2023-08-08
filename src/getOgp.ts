@@ -5,15 +5,15 @@ export default async (url: string) => {
     headers: { 'user-agent': 'Twitterbot' },
   }).catch(() => {});
 
-  // OGP取得のリクエストに失敗した場合は空オブジェクトを返す
+  // Retorna um objeto vazio se a solicitação de aquisição OGP falhar
   if (!res) {
-    console.log('failed to get ogp');
+    console.log('Aquisição do OGP falhou');
     return {};
   }
 
   const html = await res.text();
   const { result } = await ogs({ html });
   console.log(JSON.stringify(result, null, 2));
-  console.log('success to get ogp');
+  console.log('Aquisição do OGP deu certo!);
   return result;
 };
