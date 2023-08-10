@@ -1,8 +1,8 @@
 name: Posta no Bluesky
 on:
   schedule:
-    # Executa a cada 10 minutos
-    - cron: '*/10 * * * *'
+    # Executa 16 minutos depois de cada hora
+    - cron: '16 * * * *'
   workflow_dispatch:
 jobs:
   tweets-to-bluesky:
