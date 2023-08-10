@@ -6,31 +6,31 @@ import getOgp from './src/getOgp.ts';
 import postBluesky from './src/postBluesky.ts';
 import resizeImage from './src/resizeImage.ts';
 
-// rss feedから記事リストを取得
+// Obtém a lista de artigos do feed RSS
 const itemList = await getItemList();
 console.log(JSON.stringify(itemList, null, 2));
 
-// 対象がなかったら終了
+// Se não houver nenhum item, desencana
 if (!itemList.length) {
   console.log('not found feed item');
   Deno.exit(0);
 }
 
-// 取得した記事リストをループ処理
+// Dá uma olhada nos itens de artigo recuperados
 for await (const item of itemList) {
-  // 最終実行時間を更新
+  // Atualize a hora de execução final
   const timestamp = item.published
     ? new Date(item.published).toISOString()
     : new Date().toISOString();
   await Deno.writeTextFile('.timestamp', timestamp);
 
-  // 投稿記事のプロパティを作成
+  // Crie as propriedades do Skeet
   const { text, facets, link } = await createProperties(item);
 
-  // URLからOGPの取得
+  // Pega o OGP do URL
   const og = await getOgp(link);
 
-  // 画像のリサイズ
+  // Redimensione as imagens
   let images;
   for (const ogImage of og.ogImage || []) {
     const { mimeType, resizedImage } = await resizeImage(
@@ -40,7 +40,7 @@ for await (const item of itemList) {
       images = [...(images || []), { mimeType, image: resizedImage }];
   }
 
-  // Blueskyに投稿
+  // Posta no Bluesky!
   await postBluesky({
     text,
     facets,
