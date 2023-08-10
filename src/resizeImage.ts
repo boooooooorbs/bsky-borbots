@@ -4,9 +4,9 @@ export default async (url: string) => {
   const response = await fetch(url);
   const contentType = response.headers.get('content-type');
 
-  // 画像が取得できなかった場合は空オブジェクトを返す
+  // Se a imagem não puder ser obtida, retorne um objeto vazio.
   if (!response.ok || !contentType?.includes('image')) {
-    console.log('failed to get image');
+    console.log('Falhou ao obter a imagem');
     return {};
   }
 
@@ -14,7 +14,7 @@ export default async (url: string) => {
 
   let mimeType, resizedImage;
   try {
-    // TODO: 画像を1MB以下になるまでリサイズしたい
+    // TODO: Redimensionar a imagem para 1 MB ou menos.
     if (contentType.includes('gif')) {
       mimeType = 'image/gif';
       const gif = await GIF.decode(buffer, true);
@@ -32,10 +32,10 @@ export default async (url: string) => {
               )
               .encodeJPEG();
     }
-    console.log('success to resize image');
+    console.log('Sucesso ao redimensionar a imagem');
   } catch {
-    // 画像のリサイズに失敗した場合は空オブジェクトを返す
-    console.log('failed to resize image');
+    // Se o redimensionamento da imagem falhar, retorne um objeto vazio.
+    console.log('Falhou ao redimensionar a imagem');
     return {};
   }
 
@@ -44,3 +44,4 @@ export default async (url: string) => {
     resizedImage,
   };
 };
+
