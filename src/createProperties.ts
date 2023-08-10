@@ -21,7 +21,7 @@ export default async (item: FeedEntry) => {
     const key =
       splitter.splitGraphemes(`${host}${pathname}`).slice(0, 19).join('') +
       ellipsis;
-    let text = `${title}\n${key}`;
+    let text = `${description}\n${key}`;
 
     if (splitter.countGraphemes(text) > max) {
       const cnt = max - splitter.countGraphemes(`${ellipsis}${key}`);
