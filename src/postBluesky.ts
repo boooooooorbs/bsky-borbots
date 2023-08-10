@@ -19,12 +19,12 @@ export default async ({
   }[];
 }) => {
   const embed = await (async () => {
-    // 画像がない場合はreturn
+    // Se não houver imagens, desencana
     if (!images) return;
 
     const uploadedImages = [];
     for await (const { mimeType, image } of images) {
-      // 画像をアップロード
+      // Envie as imagens
       const uploadedImage = await agent.uploadBlob(image, {
         encoding: mimeType,
       });
@@ -54,5 +54,5 @@ export default async ({
 
   console.log(JSON.stringify(postObj, null, 2));
   await agent.post(postObj);
-  console.log('post to Bluesky');
+  console.log('Publicado no Bluesky');
 };
