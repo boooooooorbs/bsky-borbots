@@ -16,7 +16,7 @@ export default async (item: FeedEntry) => {
   let rt = new RichText({ text: title });
   await rt.detectFacets(agent);
 
-  // URL部分を短縮
+  // Reduzir a parte da URL
   let text = rt.text;
   let targets: { key: string; link: string }[] = [];
   rt.facets?.forEach((v) => {
@@ -34,7 +34,7 @@ export default async (item: FeedEntry) => {
     }
   });
 
-  // 300文字を超える場合は、300文字になるように切り詰める
+  // Se o texto tiver mais de 300 caracteres, segura em 300 caracteres
   const max = 300;
   const isOverLength = splitter.countGraphemes(text) > max;
   const shortenedLink =
@@ -51,14 +51,14 @@ export default async (item: FeedEntry) => {
   rt = new RichText({ text });
   await rt.detectFacets(agent);
 
-  // 短縮したURLのリンク先を元のURLに置き換え
+  // Substitua o link da URL encurtada pelo link original
   rt.facets?.forEach((v, i) => {
     if (
       v.features[0]['$type'] === 'app.bsky.richtext.facet#link' &&
       typeof v.features[0].uri === 'string' &&
       targets[i]?.link
     ) {
-      // 文字数超過の場合は、最後のリンクは元URLになるはず
+      // Se o número de caracteres exceder o limite, o último link deve ser o link original
       v.features[0].uri =
         isOverLength && rt.facets && i === rt.facets.length - 1
           ? link
