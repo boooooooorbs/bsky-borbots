@@ -28,7 +28,7 @@ export default async ({
         encoding: mimeType,
       });
 
-      // Adicionar imagem ao Skeet
+      // Adiciona imagem ao objeto do Skeet
       return {
         $type: 'blob',
         ref: {
@@ -40,19 +40,23 @@ export default async ({
     }
   })();
 
-  // Embeda imagens no Skeet
   const postObj: Partial<AtprotoAPI.AppBskyFeedPost.Record> &
     Omit<AtprotoAPI.AppBskyFeedPost.Record, 'createdAt'> = {
     $type: 'app.bsky.feed.post',
     text: rt.text,
     facets: rt.facets,
     embed: {
-      $type: 'app.bsky.embed.images',
-      images,
+      $type: 'app.bsky.embed.external',
+      external: {
+        uri: link,
+        title,
+        description,
+        thumb,
+      },
     },
   };
 
   console.log(JSON.stringify(postObj, null, 2));
   await agent.post(postObj);
-  console.log('Skeet!');
+  console.log('post to Bluesky');
 };
