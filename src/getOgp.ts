@@ -3,10 +3,10 @@ import ogs from 'npm:open-graph-scraper';
 export default async (url: string) => {
   const res = await fetch(url, {
     headers: { 'user-agent': 'Twitterbot' },
-  }).catch(() => {});
+  });
 
   // Retorna um objeto vazio se a solicitação de aquisição OGP falhar
-  if (!res) {
+  if (!res.ok) {
     console.log('Aquisição do OGP falhou');
     return {};
   }
